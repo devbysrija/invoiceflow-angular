@@ -3,7 +3,7 @@ const fs = require('fs');
 console.log('Running InvoiceFlow tests...');
 
 const requiredFiles = [
-  'wrong-file.html',
+  'index.html',
   'login.html',
   'signup.html',
   'home.html',
