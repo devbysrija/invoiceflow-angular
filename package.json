@@ -1,0 +1,8 @@
+{
+  "name": "invoiceflow-angular",
+  "version": "1.0.0",
+  "description": "InvoiceFlow invoice generator (HTML, CSS, AngularJS)",
+  "scripts": {
+    "test": "node test.js"
+  }
+}

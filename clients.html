@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ivfClients">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clients — InvoiceFlow</title>
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/clients.css">
+</head>
+<body>
+
+<div class="app-shell" ng-controller="ClientsCtrl as vm">
+  <ivf-sidebar active-page="clients"></ivf-sidebar>
+
+  <div class="app-body">
+    <div class="mobile-topbar">
+      <button ivf-mobile-menu-btn aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <span class="brand"><svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--color-primary)"><path d="M4 12c2 3 4 3 5-1s3-4 5-1 4 3 6-1"/></svg> InvoiceFlow</span>
+    </div>
+
+    <main class="main-content">
+      <div class="page-head">
+        <div>
+          <p class="eyebrow">Client directory</p>
+          <h1>Clients</h1>
+          <p>Everyone you bill, in one searchable table.</p>
+        </div>
+        <button class="btn btn-primary" ng-click="vm.openAddModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          Add client
+        </button>
+      </div>
+
+      <section class="card toolbar-card" aria-label="Search clients">
+        <div class="input-with-icon toolbar-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="search" ng-model="vm.query" placeholder="Search by name, company or email">
+        </div>
+      </section>
+
+      <section class="table-wrap" aria-label="Client list">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Company</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="c in vm.clients | filter:vm.matchesQuery as filteredClients">
+              <td>
+                <span class="client-name-cell">
+                  <span class="client-avatar">{{c.name | initials}}</span>{{c.name}}
+                </span>
+              </td>
+              <td>{{c.company}}</td>
+              <td>{{c.email}}</td>
+              <td>{{c.phone}}</td>
+              <td>
+                <div class="row-actions">
+                  <button class="icon-btn" aria-label="View {{c.name}}" ng-click="vm.openViewModal(c)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </button>
+                  <button class="icon-btn" aria-label="Edit {{c.name}}" ng-click="vm.openEditModal(c)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                  </button>
+                  <button class="icon-btn danger" aria-label="Delete {{c.name}}" ng-click="vm.deleteClient(c)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <div class="empty-state" ng-if="filteredClients.length === 0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c0-3.5 2.9-6 6.5-6s6.5 2.5 6.5 6"/></svg>
+        <p>No clients match your search yet.</p>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add / Edit Client Modal -->
+  <div class="modal-overlay" ivf-modal="vm.clientModalOpen">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="clientModalTitle">
+      <div class="modal-head">
+        <h3 id="clientModalTitle">{{vm.modalTitle}}</h3>
+        <button class="icon-btn" aria-label="Close" ng-click="vm.closeClientModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+      <form name="clientForm" novalidate ng-submit="vm.saveClient(clientForm)">
+        <div class="modal-body">
+          <div class="field" ng-class="{invalid: clientForm.name.$dirty && clientForm.name.$invalid, valid: clientForm.name.$dirty && clientForm.name.$valid}">
+            <label for="clientName">Full name</label>
+            <input type="text" id="clientName" name="name" placeholder="Ravi Shankar" ng-model="vm.form.name" ng-minlength="2" required>
+            <span class="error-msg" ng-show="clientForm.name.$dirty && clientForm.name.$invalid">Enter the client's name.</span>
+          </div>
+          <div class="field" ng-class="{invalid: clientForm.company.$dirty && clientForm.company.$invalid, valid: clientForm.company.$dirty && clientForm.company.$valid}">
+            <label for="clientCompany">Company</label>
+            <input type="text" id="clientCompany" name="company" placeholder="Orion Textiles" ng-model="vm.form.company" required>
+            <span class="error-msg" ng-show="clientForm.company.$dirty && clientForm.company.$invalid">Enter a company name.</span>
+          </div>
+          <div class="field" ng-class="{invalid: clientForm.email.$dirty && clientForm.email.$invalid, valid: clientForm.email.$dirty && clientForm.email.$valid}">
+            <label for="clientEmail">Email</label>
+            <input type="email" id="clientEmail" name="email" placeholder="name@company.com" ng-model="vm.form.email" required>
+            <span class="error-msg" ng-show="clientForm.email.$dirty && clientForm.email.$invalid">Enter a valid email address.</span>
+          </div>
+          <div class="field" ng-class="{invalid: clientForm.phone.$dirty && clientForm.phone.$invalid, valid: clientForm.phone.$dirty && clientForm.phone.$valid}">
+            <label for="clientPhone">Phone</label>
+            <input type="tel" id="clientPhone" name="phone" placeholder="+91 98765 43210" ng-model="vm.form.phone" ivf-phone required>
+            <span class="error-msg" ng-show="clientForm.phone.$dirty && clientForm.phone.$invalid">Enter a valid phone number.</span>
+          </div>
+        </div>
+        <div class="modal-foot">
+          <button type="button" class="btn btn-secondary" ng-click="vm.closeClientModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save client</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- View Client Modal -->
+  <div class="modal-overlay" ivf-modal="vm.viewModalOpen">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="viewModalTitle">
+      <div class="modal-head">
+        <h3 id="viewModalTitle">Client details</h3>
+        <button class="icon-btn" aria-label="Close" ng-click="vm.closeViewModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body" ng-if="vm.viewClient">
+        <div class="view-grid">
+          <div class="view-row"><span>Name</span><span>{{vm.viewClient.name}}</span></div>
+          <div class="view-row"><span>Company</span><span>{{vm.viewClient.company}}</span></div>
+          <div class="view-row"><span>Email</span><span>{{vm.viewClient.email}}</span></div>
+          <div class="view-row"><span>Phone</span><span>{{vm.viewClient.phone}}</span></div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-primary" ng-click="vm.closeViewModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ivf-toast></ivf-toast>
+
+<script src="js/vendor/angular.min.js"></script>
+<script src="js/core/core.module.js"></script>
+<script src="js/core/core.factories.js"></script>
+<script src="js/core/core.filters.js"></script>
+<script src="js/core/core.directives.js"></script>
+<script src="js/pages/clients.module.js"></script>
+</body>
+</html>

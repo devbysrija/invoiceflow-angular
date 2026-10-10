@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ivfInvoiceCreate">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Invoice — InvoiceFlow</title>
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/invoice-create.css">
+</head>
+<body>
+
+<div class="app-shell" ng-controller="InvoiceCreateCtrl as vm">
+  <ivf-sidebar active-page="create-invoice"></ivf-sidebar>
+
+  <div class="app-body">
+    <div class="mobile-topbar">
+      <button ivf-mobile-menu-btn aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <span class="brand"><svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--color-primary)"><path d="M4 12c2 3 4 3 5-1s3-4 5-1 4 3 6-1"/></svg> InvoiceFlow</span>
+    </div>
+
+    <main class="main-content">
+      <div class="page-head">
+        <div>
+          <p class="eyebrow">New invoice</p>
+          <h1>Create invoice</h1>
+          <p>Add a client and line items — totals update as you type.</p>
+        </div>
+        <div class="row-actions">
+          <button type="button" class="btn btn-secondary" ng-click="vm.openPreview()">Preview</button>
+          <button type="button" class="btn btn-secondary" ng-click="vm.downloadInvoice()">Download PDF</button>
+          <button type="button" class="btn btn-primary" ng-click="vm.saveInvoice(invoiceForm)">Save invoice</button>
+        </div>
+      </div>
+
+      <form name="invoiceForm" novalidate>
+        <section class="card invoice-top-grid">
+          <div class="field">
+            <label for="invoiceNumber">Invoice number</label>
+            <input type="text" id="invoiceNumber" name="number" ng-model="vm.invoice.number" required>
+          </div>
+          <div class="field">
+            <label for="clientSelect">Client</label>
+            <select id="clientSelect" name="client" ng-model="vm.invoice.client" required
+                    ng-options="c.name as (c.name + ' — ' + c.company) for c in vm.clients">
+              <option value="">Select a client…</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="invoiceDate">Invoice date</label>
+            <input type="date" id="invoiceDate" name="date" ng-model="vm.invoice.date" required>
+          </div>
+          <div class="field">
+            <label for="dueDate">Due date</label>
+            <input type="date" id="dueDate" name="due" ng-model="vm.invoice.due" required>
+          </div>
+        </section>
+
+        <section class="card items-card">
+          <div class="items-card-head">
+            <h3>Line items</h3>
+            <button type="button" class="btn btn-secondary btn-sm" ng-click="vm.addItem()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+              Add item
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Description</th>
+                  <th>Qty</th>
+                  <th>Unit price</th>
+                  <th>Tax %</th>
+                  <th>Discount %</th>
+                  <th>Total</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="item in vm.items track by item.id">
+                  <td><input type="text" placeholder="Item or service" ng-model="item.desc" required></td>
+                  <td><input type="number" min="1" step="1" ng-model="item.qty"></td>
+                  <td><input type="number" min="0" step="0.01" ng-model="item.price"></td>
+                  <td><input type="number" min="0" step="0.5" ng-model="item.tax"></td>
+                  <td><input type="number" min="0" step="0.5" ng-model="item.discount"></td>
+                  <td class="item-total-cell figures">{{vm.lineTotal(item) | ivfCurrency}}</td>
+                  <td>
+                    <button type="button" class="icon-btn danger" aria-label="Remove item" ng-click="vm.removeItem(item)">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="invoice-bottom-grid">
+          <div class="card">
+            <div class="field">
+              <label for="notes">Notes</label>
+              <textarea id="notes" placeholder="Payment terms, bank details or a thank-you note…" ng-model="vm.invoice.notes"></textarea>
+            </div>
+            <div class="field">
+              <label for="sigPad">Signature</label>
+              <canvas id="sigPad" ivf-signature-pad="vm.sigPad" width="360" height="120" aria-label="Draw your signature"></canvas>
+              <div class="row-actions">
+                <button type="button" class="btn btn-ghost btn-sm" ng-click="vm.sigPad.clear()">Clear signature</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card totals-card">
+            <h3>Summary</h3>
+            <div class="totals-row"><span>Subtotal</span><span class="figures">{{vm.totals.subtotal | ivfCurrency}}</span></div>
+            <div class="totals-row"><span>Tax</span><span class="figures">{{vm.totals.taxTotal | ivfCurrency}}</span></div>
+            <div class="totals-row"><span>Discount</span><span class="figures">−{{vm.totals.discountTotal | ivfCurrency}}</span></div>
+            <div class="totals-row totals-grand"><span>Grand total</span><span class="figures">{{vm.totals.grand | ivfCurrency}}</span></div>
+          </div>
+        </section>
+      </form>
+    </main>
+  </div>
+
+  <!-- Preview modal -->
+  <div class="modal-overlay" ivf-modal="vm.previewOpen">
+    <div class="modal preview-modal" role="dialog" aria-modal="true" aria-labelledby="previewTitle">
+      <div class="modal-head">
+        <h3 id="previewTitle">Invoice preview</h3>
+        <button class="icon-btn" aria-label="Close" ng-click="vm.closePreview()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body" ng-bind-html="vm.previewHtml"></div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-secondary" ng-click="vm.closePreview()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ivf-toast></ivf-toast>
+
+<script src="js/vendor/angular.min.js"></script>
+<script src="js/core/core.module.js"></script>
+<script src="js/core/core.factories.js"></script>
+<script src="js/core/core.filters.js"></script>
+<script src="js/core/core.directives.js"></script>
+<script src="js/pages/invoiceCreate.module.js"></script>
+</body>
+</html>

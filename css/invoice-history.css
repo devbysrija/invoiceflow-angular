@@ -1,0 +1,22 @@
+.toolbar-card{
+  display: flex;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-5);
+  flex-wrap: wrap;
+}
+.toolbar-search{ flex: 1; min-width: 220px; max-width: 380px; }
+.toolbar-card select{ max-width: 200px; }
+
+.invoice-number-cell{ font-weight: 600; }
+
+.view-grid{ display: grid; gap: var(--space-4); }
+.view-row{ display: flex; justify-content: space-between; border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-3); }
+.view-row:last-child{ border-bottom: none; }
+.view-row span:first-child{ color: var(--color-text-muted); font-size: 0.84rem; }
+.view-row span:last-child{ font-weight: 600; font-size: 0.9rem; }
+
+@media (max-width: 640px){
+  .toolbar-card{ flex-direction: column; }
+  .toolbar-search, .toolbar-card select{ max-width: none; }
+}

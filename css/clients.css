@@ -1,0 +1,20 @@
+.toolbar-card{
+  display: flex;
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-5);
+}
+.toolbar-search{ flex: 1; max-width: 380px; }
+
+.client-avatar{
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--color-primary-light); color: var(--color-primary);
+  font-weight: 700; font-size: 0.8rem; margin-right: 10px; flex-shrink: 0;
+}
+.client-name-cell{ display: flex; align-items: center; }
+
+.view-grid{ display: grid; gap: var(--space-4); }
+.view-row{ display: flex; justify-content: space-between; border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-3); }
+.view-row:last-child{ border-bottom: none; }
+.view-row span:first-child{ color: var(--color-text-muted); font-size: 0.84rem; }
+.view-row span:last-child{ font-weight: 600; font-size: 0.9rem; }

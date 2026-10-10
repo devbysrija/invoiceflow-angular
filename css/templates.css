@@ -1,0 +1,138 @@
+.template-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-5);
+}
+
+.template-card{
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.template-card:hover{ transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.template-card.active{ outline: 2px solid var(--color-primary); outline-offset: -1px; }
+
+.template-preview{
+  height: 210px;
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  background: #F8FAFC;
+  display: flex;
+}
+
+.template-body{ padding: var(--space-4); display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.template-name{ font-weight: 600; font-size: 0.92rem; margin: 0; }
+.template-tag{ font-size: 0.72rem; color: var(--color-text-muted); margin: 2px 0 0; }
+
+/* ==========================================================================
+   Mini invoice preview — a genuine miniature invoice layout, not just
+   colored placeholder bars. Shared skeleton below, then one visual
+   variant per template id. --tpl-accent / --tpl-accent-soft are set
+   inline per card from js/templates.js so this file only holds layout.
+   The same skeleton + variant classes are reused (at full size) for the
+   Create Invoice preview via css/invoice-create.css.
+   ========================================================================== */
+.mini-invoice{
+  --tpl-accent: #4F46E5;
+  --tpl-accent-soft: #4F46E51a;
+  width: 100%;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 10px;
+  line-height: 1.4;
+  color: var(--color-text);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: hidden;
+}
+
+.mini-invoice .mi-head{
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--tpl-accent);
+}
+.mini-invoice .mi-title{
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+  color: var(--tpl-accent);
+}
+.mini-invoice .mi-number{ font-size: 9px; color: var(--color-text-muted); }
+
+.mini-invoice .mi-client{ font-size: 9px; color: var(--color-text-muted); }
+.mini-invoice .mi-client strong{ display: block; font-size: 10px; color: var(--color-text); font-weight: 600; }
+
+.mini-invoice .mi-items{ flex: 1; display: flex; flex-direction: column; gap: 2px; margin-top: 2px; }
+.mini-invoice .mi-row{
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  padding: 3px 4px;
+  border-bottom: 1px dashed var(--color-border);
+}
+.mini-invoice .mi-row:last-child{ border-bottom: none; }
+
+.mini-invoice .mi-total{
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 10.5px;
+  padding-top: 6px;
+  margin-top: auto;
+  border-top: 1.5px solid var(--tpl-accent);
+  color: var(--tpl-accent);
+}
+
+/* ---------- Classic: structured, bordered table, purple accent ---------- */
+.template-classic{ border-color: var(--tpl-accent); }
+.template-classic .mi-items{ border: 1px solid var(--color-border); border-radius: 6px; padding: 2px 4px; background: #fff; }
+.template-classic .mi-row{ border-bottom: 1px solid var(--color-border); }
+
+/* ---------- Minimal: whitespace-first, thin single accent, no boxes ---------- */
+.template-minimal{ border: none; box-shadow: none; padding: 16px 12px; }
+.template-minimal .mi-head{ border-bottom: 1px solid var(--tpl-accent); }
+.template-minimal .mi-title{ font-weight: 600; letter-spacing: 0.03em; }
+.template-minimal .mi-row{ border-bottom: none; padding: 4px 0; }
+.template-minimal .mi-total{ border-top: 1px solid var(--tpl-accent); font-weight: 600; }
+
+/* ---------- Bold Header: strong dark/orange header banner ---------- */
+.template-bold{ padding-top: 0; }
+.template-bold .mi-head{
+  background: var(--tpl-accent);
+  border-bottom: none;
+  color: #fff;
+  margin: 0 -12px 8px;
+  padding: 10px 12px;
+  border-radius: 10px 10px 0 0;
+}
+.template-bold .mi-title{ color: #fff; font-size: 12px; }
+.template-bold .mi-number{ color: rgba(255,255,255,0.85); }
+.template-bold .mi-total{ background: var(--tpl-accent-soft); border-top: none; border-radius: 6px; padding: 5px 6px; margin-top: 4px; }
+
+/* ---------- Ledger: accounting grid, green, table-heavy ---------- */
+.template-ledger .mi-items{ border: 1px solid var(--tpl-accent); border-radius: 4px; }
+.template-ledger .mi-row{ border-bottom: 1px solid var(--color-border); padding: 3px 6px; font-variant-numeric: tabular-nums; }
+.template-ledger .mi-row:nth-child(even){ background: var(--tpl-accent-soft); }
+.template-ledger .mi-head{ border-bottom: 1px solid var(--tpl-accent); }
+.template-ledger .mi-total{ border-top: 2px solid var(--tpl-accent); }
+
+/* ---------- Studio: soft, rounded, creative pink accents ---------- */
+.template-studio{
+  background: linear-gradient(180deg, var(--tpl-accent-soft), #fff 60%);
+  border-radius: 14px;
+  border-color: transparent;
+}
+.template-studio .mi-head{ border-bottom: none; }
+.template-studio .mi-title{ background: var(--tpl-accent-soft); padding: 3px 8px; border-radius: 999px; }
+.template-studio .mi-items{ background: #fff; border-radius: 10px; padding: 4px 6px; }
+.template-studio .mi-row{ border-bottom: none; border-radius: 6px; }
+.template-studio .mi-row:nth-child(odd){ background: var(--tpl-accent-soft); }
+.template-studio .mi-total{ border-top: none; background: var(--tpl-accent); color: #fff; border-radius: 999px; padding: 5px 10px; }

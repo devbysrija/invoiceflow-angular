@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ivfInvoiceHistory">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invoice History — InvoiceFlow</title>
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/invoice-history.css">
+</head>
+<body>
+
+<div class="app-shell" ng-controller="InvoiceHistoryCtrl as vm">
+  <ivf-sidebar active-page="invoice-history"></ivf-sidebar>
+
+  <div class="app-body">
+    <div class="mobile-topbar">
+      <button ivf-mobile-menu-btn aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <span class="brand"><svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--color-primary)"><path d="M4 12c2 3 4 3 5-1s3-4 5-1 4 3 6-1"/></svg> InvoiceFlow</span>
+    </div>
+
+    <main class="main-content">
+      <div class="page-head">
+        <div>
+          <p class="eyebrow">All invoices</p>
+          <h1>Invoice history</h1>
+          <p>Every invoice you've sent, with payment status built right in.</p>
+        </div>
+        <a href="create-invoice.html" class="btn btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          New invoice
+        </a>
+      </div>
+
+      <section class="card toolbar-card">
+        <div class="input-with-icon toolbar-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="search" ng-model="vm.query" placeholder="Search by invoice number or client">
+        </div>
+        <select ng-model="vm.status">
+          <option value="">All statuses</option>
+          <option value="Paid">Paid</option>
+          <option value="Pending">Pending</option>
+          <option value="Overdue">Overdue</option>
+          <option value="Draft">Draft</option>
+        </select>
+      </section>
+
+      <section class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Invoice #</th>
+              <th>Client</th>
+              <th>Date</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="inv in vm.invoices | filter:vm.matchesFilters as filteredInvoices">
+              <td class="invoice-number-cell">{{inv.number}}</td>
+              <td>{{inv.client}}</td>
+              <td>{{inv.date}}</td>
+              <td class="figures">{{inv.amount | ivfCurrency}}</td>
+              <td><span class="badge" ng-class="inv.status | statusBadgeClass">{{inv.status}}</span></td>
+              <td>
+                <div class="row-actions">
+                  <button class="icon-btn" aria-label="View {{inv.number}}" ng-click="vm.openView(inv)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </button>
+                  <button class="icon-btn" aria-label="Edit {{inv.number}}" ng-click="vm.openEdit(inv)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                  </button>
+                  <button class="icon-btn" aria-label="Download {{inv.number}}" ng-click="vm.downloadInvoice(inv)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+                  </button>
+                  <button class="icon-btn danger" aria-label="Delete {{inv.number}}" ng-click="vm.deleteInvoice(inv)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <div class="empty-state" ng-if="filteredInvoices.length === 0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M13 3v5h5"/></svg>
+        <p>No invoices match this search or filter.</p>
+      </div>
+    </main>
+  </div>
+
+  <!-- View invoice modal -->
+  <div class="modal-overlay" ivf-modal="vm.viewModalOpen">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="viewInvoiceTitle">
+      <div class="modal-head">
+        <h3 id="viewInvoiceTitle">Invoice details</h3>
+        <button class="icon-btn" aria-label="Close" ng-click="vm.closeView()">
+          <img src="images/undraw_printing-invoices_g6c9.png" alt="Invoice Illustration">
+        </button>
+      </div>
+      <div class="modal-body" ng-if="vm.viewInvoice">
+        <div class="view-grid">
+          <div class="view-row"><span>Invoice number</span><span>{{vm.viewInvoice.number}}</span></div>
+          <div class="view-row"><span>Client</span><span>{{vm.viewInvoice.client}}</span></div>
+          <div class="view-row"><span>Date</span><span>{{vm.viewInvoice.date}}</span></div>
+          <div class="view-row"><span>Amount</span><span>{{vm.viewInvoice.amount | ivfCurrency}}</span></div>
+          <div class="view-row"><span>Status</span><span><span class="badge" ng-class="vm.viewInvoice.status | statusBadgeClass">{{vm.viewInvoice.status}}</span></span></div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-primary" ng-click="vm.closeView()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit status modal -->
+  <div class="modal-overlay" ivf-modal="vm.editModalOpen">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="editInvoiceTitle">
+      <div class="modal-head">
+        <h3 id="editInvoiceTitle">Update invoice</h3>
+        <button class="icon-btn" aria-label="Close" ng-click="vm.closeEdit()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+      <form name="editInvoiceForm" ng-submit="vm.saveEdit(editInvoiceForm)">
+        <div class="modal-body">
+          <div class="field">
+            <label for="editAmount">Amount</label>
+            <input type="number" id="editAmount" name="amount" min="0" step="1" ng-model="vm.editForm.amount" required>
+          </div>
+          <div class="field">
+            <label for="editStatus">Payment status</label>
+            <select id="editStatus" ng-model="vm.editForm.status">
+              <option value="Paid">Paid</option>
+              <option value="Pending">Pending</option>
+              <option value="Overdue">Overdue</option>
+              <option value="Draft">Draft</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-foot">
+          <button type="button" class="btn btn-secondary" ng-click="vm.closeEdit()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<ivf-toast></ivf-toast>
+
+<script src="js/vendor/angular.min.js"></script>
+<script src="js/core/core.module.js"></script>
+<script src="js/core/core.factories.js"></script>
+<script src="js/core/core.filters.js"></script>
+<script src="js/core/core.directives.js"></script>
+<script src="js/pages/invoiceHistory.module.js"></script>
+</body>
+</html>

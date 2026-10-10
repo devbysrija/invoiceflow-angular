@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ivfTemplates">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Templates — InvoiceFlow</title>
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/templates.css">
+</head>
+<body>
+
+<div class="app-shell" ng-controller="TemplatesCtrl as vm">
+  <ivf-sidebar active-page="templates"></ivf-sidebar>
+
+  <div class="app-body">
+    <div class="mobile-topbar">
+      <button ivf-mobile-menu-btn aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <span class="brand"><svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--color-primary)"><path d="M4 12c2 3 4 3 5-1s3-4 5-1 4 3 6-1"/></svg> InvoiceFlow</span>
+    </div>
+
+    <main class="main-content">
+      <div class="page-head">
+        <div>
+          <p class="eyebrow">Look & layout</p>
+          <h1>Templates</h1>
+          <p>Pick the layout every new invoice will start from. Change it anytime.</p>
+        </div>
+      </div>
+
+      <section class="template-grid" aria-label="Available invoice templates">
+        <article class="template-card" ng-repeat="t in vm.templates" ng-class="{active: t.id === vm.selectedId}">
+          <figure class="template-preview">
+            <div class="mini-invoice" ng-class="'template-' + t.id" ng-style="{'--tpl-accent': t.accent, '--tpl-accent-soft': vm.accentSoft(t.accent)}">
+              <div class="mi-head">
+                <span class="mi-title">INVOICE</span>
+                <span class="mi-number">{{vm.sample.number}}</span>
+              </div>
+              <div class="mi-client">
+                <span>Bill to</span>
+                <strong>{{vm.sample.client}}</strong>
+              </div>
+              <div class="mi-items">
+                <div class="mi-row" ng-repeat="it in vm.sample.items">
+                  <span>{{it.desc}}</span>
+                  <span class="figures">{{it.amount | ivfCurrency}}</span>
+                </div>
+              </div>
+              <div class="mi-total">
+                <span>Total</span>
+                <span class="figures">{{vm.sample.total | ivfCurrency}}</span>
+              </div>
+            </div>
+            <figcaption class="sr-only">{{t.name}} template preview</figcaption>
+          </figure>
+          <div class="template-body">
+            <div>
+              <p class="template-name">{{t.name}}</p>
+              <p class="template-tag">{{t.tag}}</p>
+            </div>
+            <button class="btn btn-sm" ng-class="t.id === vm.selectedId ? 'btn-secondary' : 'btn-primary'" ng-click="vm.useTemplate(t)">
+              {{t.id === vm.selectedId ? 'Selected' : 'Use template'}}
+            </button>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+</div>
+
+<ivf-toast></ivf-toast>
+
+<script src="js/vendor/angular.min.js"></script>
+<script src="js/core/core.module.js"></script>
+<script src="js/core/core.factories.js"></script>
+<script src="js/core/core.filters.js"></script>
+<script src="js/core/core.directives.js"></script>
+<script src="js/pages/templates.module.js"></script>
+</body>
+</html>

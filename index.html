@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ivfLanding">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InvoiceFlow — Invoicing that keeps moving</title>
+<meta name="description" content="Create, send and track invoices in minutes. InvoiceFlow is a clean, modern invoicing workspace for freelancers and small teams.">
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/index.css">
+</head>
+<body ng-controller="LandingCtrl as vm">
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a href="index.html" class="brand">
+    <img src="images/Invoicelogo.png" alt="InvoiceFlow Logo" class="brand-logo">
+    <span>InvoiceFlow</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary" ng-style="{display: vm.navOpen ? 'flex' : '', flexDirection: vm.navOpen ? 'column' : ''}">
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How it works</a>
+      <a href="#help">Help</a>
+    </nav>
+    <div class="site-header-actions" ng-style="{display: vm.navOpen ? 'flex' : '', flexDirection: vm.navOpen ? 'column' : ''}">
+      <a href="login.html" class="btn btn-ghost">Log in</a>
+      <a href="signup.html" class="btn btn-primary">Start free</a>
+    </div>
+    <button class="nav-toggle" aria-label="Open menu" ng-click="vm.toggleNav()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">Invoicing, uninterrupted</p>
+      <h1>Send the invoice.<br>Get paid. Move on.</h1>
+      <p class="hero-sub">InvoiceFlow is where a line item becomes a paid invoice — clients, drafts, taxes and status, all in one calm workspace instead of six spreadsheets.</p>
+      <div class="hero-actions">
+        <a href="signup.html" class="btn btn-primary">Create your first invoice</a>
+        <a href="#how-it-works" class="btn btn-secondary">See how it works</a>
+      </div>
+      <p class="hero-meta">No card required · Free for up to 15 invoices a month</p>
+    </div>
+
+    <figure class="hero-visual">
+      <img src="images/undraw_printing-invoices_g6c9.svg" alt="Invoice Illustration">
+    </figure>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section" id="features">
+    <div class="section-head">
+      <p class="eyebrow">Everything, nothing extra</p>
+      <h2>Built around the four things invoicing actually needs</h2>
+    </div>
+    <div class="feature-grid">
+      <article class="card feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c0-3.5 2.9-6 6.5-6s6.5 2.5 6.5 6"/><circle cx="17" cy="9" r="2.6"/><path d="M15.5 14.2c2.7.4 4.5 2.6 4.5 5.8"/></svg>
+        </div>
+        <h3>Clients, kept tidy</h3>
+        <p>One table for every client — name, company, contact — with add and edit happening in a quick dialog, never a new page.</p>
+      </article>
+      <article class="card feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M13 3v5h5"/><path d="M12 12v6M9 15h6"/></svg>
+        </div>
+        <h3>Invoices that total themselves</h3>
+        <p>Add line items and watch tax, discount and grand total recalculate instantly — no separate calculator, no page reload.</p>
+      </article>
+      <article class="card feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l4 2"/></svg>
+        </div>
+        <h3>A history that remembers status</h3>
+        <p>Every invoice sits in one searchable log with payment status built in as a column — paid, pending or overdue, at a glance.</p>
+      </article>
+      <article class="card feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg>
+        </div>
+        <h3>Templates you can reuse</h3>
+        <p>Pick a layout once, and every new invoice starts from that look — swap it anytime from the template gallery.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section section-tinted" id="how-it-works">
+    <div class="section-head">
+      <p class="eyebrow">The actual sequence</p>
+      <h2>Three steps, in this order, every time</h2>
+    </div>
+    <ol class="steps">
+      <li class="step">
+        <span class="step-num">01</span>
+        <h3>Add the client</h3>
+        <p>Name, company and contact — saved once, reused on every future invoice.</p>
+      </li>
+      <li class="step">
+        <span class="step-num">02</span>
+        <h3>Build the invoice</h3>
+        <p>Line items, tax and discount calculate live as you type. Preview before you send.</p>
+      </li>
+      <li class="step">
+        <span class="step-num">03</span>
+        <h3>Track it to paid</h3>
+        <p>Status updates in the history table — no separate tracker to check.</p>
+      </li>
+    </ol>
+  </section>
+
+
+  <!-- CTA -->
+  <section class="cta-band">
+    <h2>Your next invoice takes about ninety seconds.</h2>
+    <a href="signup.html" class="btn btn-primary">Create a free account</a>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <a href="index.html" class="brand"><svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12c2 3 4 3 5-1s3-4 5-1 4 3 6-1"/></svg><span>InvoiceFlow</span></a>
+    <p>&copy; 2026 InvoiceFlow. A student project built for learning purposes.</p>
+  </div>
+</footer>
+
+<script src="js/vendor/angular.min.js"></script>
+<script src="js/pages/index.module.js"></script>
+</body>
+</html>

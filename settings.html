@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ivfSettings">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings — InvoiceFlow</title>
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/settings.css">
+</head>
+<body>
+
+<div class="app-shell" ng-controller="SettingsCtrl as vm">
+  <ivf-sidebar active-page="settings"></ivf-sidebar>
+
+  <div class="app-body">
+    <div class="mobile-topbar">
+      <button ivf-mobile-menu-btn aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <span class="brand"><svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--color-primary)"><path d="M4 12c2 3 4 3 5-1s3-4 5-1 4 3 6-1"/></svg> InvoiceFlow</span>
+    </div>
+
+    <main class="main-content">
+      <div class="page-head">
+        <div>
+          <p class="eyebrow">Company profile</p>
+          <h1>Settings</h1>
+          <p>These details appear on every invoice you create.</p>
+        </div>
+        <button class="btn btn-primary" ng-click="vm.saveSettings(settingsForm)">Save changes</button>
+      </div>
+
+      <form name="settingsForm" class="settings-grid" novalidate>
+        <section class="card">
+          <h3>Company details</h3>
+
+          <div class="field" ng-class="{invalid: settingsForm.companyName.$dirty && settingsForm.companyName.$invalid, valid: settingsForm.companyName.$dirty && settingsForm.companyName.$valid}">
+            <label for="companyName">Company name</label>
+            <input type="text" id="companyName" name="companyName" placeholder="Orion Textiles" ng-model="vm.settings.companyName" required>
+            <span class="error-msg" ng-show="settingsForm.companyName.$dirty && settingsForm.companyName.$invalid">Enter your company name.</span>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="gstNumber">GST number</label>
+              <input type="text" id="gstNumber" name="gstNumber" placeholder="22AAAAA0000A1Z5" ng-model="vm.settings.gstNumber" ng-pattern="/^[0-9A-Z]{15}$/" maxlength="15">
+              <span class="hint">15-character GSTIN, optional.</span>
+            </div>
+            <div class="field">
+              <label for="currency">Currency</label>
+              <select id="currency" ng-model="vm.settings.currency">
+                <option value="INR">₹ INR — Indian Rupee</option>
+                <option value="USD">$ USD — US Dollar</option>
+                <option value="EUR">€ EUR — Euro</option>
+                <option value="GBP">£ GBP — British Pound</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="address">Address</label>
+            <textarea id="address" placeholder="Street, city, state, PIN code" ng-model="vm.settings.address"></textarea>
+            <button type="button" class="btn btn-secondary btn-sm" ng-click="vm.useCurrentLocation()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+              Use current location
+            </button>
+            <span class="hint">{{vm.locationStatus}}</span>
+          </div>
+
+          <div class="form-row">
+            <div class="field" ng-class="{invalid: settingsForm.phone.$dirty && settingsForm.phone.$invalid, valid: settingsForm.phone.$dirty && settingsForm.phone.$valid}">
+              <label for="phone">Phone</label>
+              <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" ng-model="vm.settings.phone" ivf-phone>
+              <span class="error-msg" ng-show="settingsForm.phone.$dirty && settingsForm.phone.$invalid">Enter a valid phone number.</span>
+            </div>
+            <div class="field" ng-class="{invalid: settingsForm.settingsEmail.$dirty && settingsForm.settingsEmail.$invalid, valid: settingsForm.settingsEmail.$dirty && settingsForm.settingsEmail.$valid}">
+              <label for="settingsEmail">Email</label>
+              <input type="email" id="settingsEmail" name="settingsEmail" placeholder="billing@company.com" ng-model="vm.settings.settingsEmail">
+              <span class="error-msg" ng-show="settingsForm.settingsEmail.$dirty && settingsForm.settingsEmail.$invalid">Enter a valid email address.</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h3>Logo</h3>
+          <div class="logo-upload-row">
+            <div class="logo-preview">
+              <img ng-if="vm.logoDataUrl" ng-src="{{vm.logoDataUrl}}" alt="Company logo">
+              <svg ng-if="!vm.logoDataUrl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12c2 3 4 3 5-1s3-4 5-1 4 3 6-1"/></svg>
+            </div>
+            <div>
+              <label class="btn btn-secondary btn-sm" for="logoInput">Upload logo</label>
+              <input type="file" id="logoInput" accept="image/*" class="sr-only" ivf-file-change="vm.onLogoSelected($files)">
+              <p class="hint">PNG or JPG, up to 2MB. Shown on your invoice header.</p>
+            </div>
+          </div>
+        </section>
+      </form>
+    </main>
+  </div>
+</div>
+
+<ivf-toast></ivf-toast>
+
+<script src="js/vendor/angular.min.js"></script>
+<script src="js/core/core.module.js"></script>
+<script src="js/core/core.factories.js"></script>
+<script src="js/core/core.filters.js"></script>
+<script src="js/core/core.directives.js"></script>
+<script src="js/pages/settings.module.js"></script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ivfHome">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home — InvoiceFlow</title>
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+
+<div class="app-shell" ng-controller="HomeCtrl as vm">
+  <ivf-sidebar active-page="home"></ivf-sidebar>
+
+  <div class="app-body">
+    <div class="mobile-topbar">
+      <button ivf-mobile-menu-btn aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <span class="brand"><svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--color-primary)"><path d="M4 12c2 3 4 3 5-1s3-4 5-1 4 3 6-1"/></svg> InvoiceFlow</span>
+    </div>
+
+    <main class="main-content">
+      <div class="page-head">
+        <div>
+          <p class="eyebrow">Welcome back</p>
+          <h1>Hi, {{vm.user.name || 'there'}}</h1>
+          <p>Here's where things stand today.</p>
+        </div>
+        <a href="create-invoice.html" class="btn btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          Create invoice
+        </a>
+      </div>
+
+      <section class="stat-grid" aria-label="Overview">
+        <article class="card stat-card">
+          <span class="stat-label">Total invoiced</span>
+          <span class="stat-value figures">{{vm.totalInvoiced | ivfCurrency}}</span>
+        </article>
+        <article class="card stat-card">
+          <span class="stat-label">Pending</span>
+          <span class="stat-value figures">{{vm.pendingCount}}</span>
+        </article>
+        <article class="card stat-card">
+          <span class="stat-label">Overdue</span>
+          <span class="stat-value figures">{{vm.overdueCount}}</span>
+        </article>
+        <article class="card stat-card">
+          <span class="stat-label">Clients</span>
+          <span class="stat-value figures">{{vm.clientCount}}</span>
+        </article>
+      </section>
+
+      <section class="quick-links" aria-label="Quick links">
+        <h2>Jump to</h2>
+        <div class="quick-grid">
+          <a class="card quick-card" href="clients.html">
+            <div>
+              <h3>Clients</h3>
+              <p>Add, edit or look up who you bill.</p>
+            </div>
+          </a>
+          <a class="card quick-card" href="create-invoice.html">
+            <div>
+              <h3>Create invoice</h3>
+              <p>Build a new invoice with live totals.</p>
+            </div>
+          </a>
+          <a class="card quick-card" href="invoice-history.html">
+            <div>
+              <h3>Invoice history</h3>
+              <p>Search, filter and track payment status.</p>
+            </div>
+          </a>
+          <a class="card quick-card" href="templates.html">
+            <div>
+              <h3>Templates</h3>
+              <p>Choose the layout new invoices start from.</p>
+            </div>
+          </a>
+          <a class="card quick-card" href="settings.html">
+            <div>
+              <h3>Settings</h3>
+              <p>Company details, logo and currency.</p>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <section class="recent-card card" aria-label="Recent invoices">
+        <div class="recent-head">
+          <h2>Recent invoices</h2>
+          <a href="invoice-history.html" class="btn btn-ghost btn-sm">View all</a>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Invoice #</th><th>Client</th><th>Amount</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="inv in vm.recentInvoices">
+                <td>{{inv.number}}</td>
+                <td>{{inv.client}}</td>
+                <td class="figures">{{inv.amount | ivfCurrency}}</td>
+                <td><span class="badge" ng-class="inv.status | statusBadgeClass">{{inv.status}}</span></td>
+              </tr>
+              <tr ng-if="vm.recentInvoices.length === 0">
+                <td colspan="4">No invoices yet — <a href="create-invoice.html">create your first one</a>.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<ivf-toast></ivf-toast>
+
+<script src="js/vendor/angular.min.js"></script>
+<script src="js/core/core.module.js"></script>
+<script src="js/core/core.factories.js"></script>
+<script src="js/core/core.filters.js"></script>
+<script src="js/core/core.directives.js"></script>
+<script src="js/pages/home.module.js"></script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ivfAuth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create an account — InvoiceFlow</title>
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/auth.css">
+</head>
+<body class="auth-body">
+
+<div class="auth-shell">
+  <aside class="auth-side">
+    <a href="index.html" class="brand brand-light">
+      <svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12c2 3 4 3 5-1s3-4 5-1 4 3 6-1"/></svg>
+      <span>InvoiceFlow</span>
+    </a>
+    <blockquote class="auth-quote">
+      "Fifteen minutes to set up. I haven't opened a spreadsheet since."
+    </blockquote>
+    <p class="auth-side-caption">Free for up to 15 invoices a month, no card required.</p>
+  </aside>
+
+  <main class="auth-main">
+    <div class="auth-card card" ng-controller="SignupCtrl as vm">
+      <p class="eyebrow">Get started</p>
+      <h1>Create your account</h1>
+      <p class="auth-sub">Set up your workspace in under a minute.</p>
+
+      <form name="signupForm" novalidate ng-submit="vm.submit(signupForm)">
+        <div class="field" ng-class="{invalid: signupForm.fullName.$dirty && signupForm.fullName.$invalid, valid: signupForm.fullName.$dirty && signupForm.fullName.$valid}">
+          <label for="fullName">Full name</label>
+          <input type="text" id="fullName" name="fullName" placeholder="Ananya Rao" autocomplete="name"
+                 ng-model="vm.account.fullName" ng-minlength="2" required>
+          <span class="error-msg" ng-show="signupForm.fullName.$dirty && signupForm.fullName.$invalid">Enter your full name.</span>
+        </div>
+
+        <div class="field" ng-class="{invalid: signupForm.email.$dirty && signupForm.email.$invalid, valid: signupForm.email.$dirty && signupForm.email.$valid}">
+          <label for="email">Email address</label>
+          <input type="email" id="email" name="email" placeholder="you@company.com" autocomplete="email"
+                 ng-model="vm.account.email" required>
+          <span class="error-msg" ng-show="signupForm.email.$dirty && signupForm.email.$invalid">Enter a valid email address.</span>
+        </div>
+
+        <div class="field" ng-class="{invalid: signupForm.phone.$dirty && signupForm.phone.$invalid, valid: signupForm.phone.$dirty && signupForm.phone.$valid}">
+          <label for="phone">Phone number</label>
+          <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" autocomplete="tel"
+                 ng-model="vm.account.phone" ivf-phone required>
+          <span class="error-msg" ng-show="signupForm.phone.$dirty && signupForm.phone.$invalid">Enter a valid phone number.</span>
+        </div>
+
+        <div class="field" ng-class="{invalid: signupForm.password.$dirty && signupForm.password.$invalid, valid: signupForm.password.$dirty && signupForm.password.$valid}">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="At least 6 characters" autocomplete="new-password"
+                 ng-model="vm.account.password" ng-minlength="6" required>
+          <span class="error-msg" ng-show="signupForm.password.$dirty && signupForm.password.$invalid">Password must be at least 6 characters.</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Create account</button>
+      </form>
+
+      <p class="auth-switch">Already have an account? <a href="login.html">Log in</a></p>
+    </div>
+  </main>
+</div>
+
+<ivf-toast></ivf-toast>
+
+<script src="js/vendor/angular.min.js"></script>
+<script src="js/core/core.module.js"></script>
+<script src="js/core/core.factories.js"></script>
+<script src="js/core/core.filters.js"></script>
+<script src="js/core/core.directives.js"></script>
+<script src="js/pages/auth.module.js"></script>
+</body>
+</html>

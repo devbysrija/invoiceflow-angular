@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ivfAuth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log in — InvoiceFlow</title>
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/auth.css">
+</head>
+<body class="auth-body">
+
+<div class="auth-shell">
+  <aside class="auth-side">
+    <a href="index.html" class="brand brand-light">
+      <svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12c2 3 4 3 5-1s3-4 5-1 4 3 6-1"/></svg>
+      <span>InvoiceFlow</span>
+    </a>
+    <blockquote class="auth-quote">
+      "Client added, invoice sent, status tracked — all before my coffee finished."
+    </blockquote>
+    <p class="auth-side-caption">A calmer way to run the paperwork side of freelancing.</p>
+  </aside>
+
+  <main class="auth-main">
+    <div class="auth-card card" ng-controller="LoginCtrl as vm">
+      <p class="eyebrow">Welcome back</p>
+      <h1>Log in to your workspace</h1>
+      <p class="auth-sub">Enter your details to pick up right where you left off.</p>
+
+      <form name="loginForm" novalidate ng-submit="vm.submit(loginForm)">
+        <div class="field" ng-class="{invalid: loginForm.email.$dirty && loginForm.email.$invalid, valid: loginForm.email.$dirty && loginForm.email.$valid}">
+          <label for="email">Email address</label>
+          <div class="input-with-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18v12H3z"/><path d="m3 7 9 6 9-6"/></svg>
+            <input type="email" id="email" name="email" placeholder="you@company.com" autocomplete="email"
+                   ng-model="vm.credentials.email" required>
+          </div>
+          <span class="error-msg" ng-show="loginForm.email.$dirty && loginForm.email.$invalid">Enter a valid email address.</span>
+        </div>
+
+        <div class="field" ng-class="{invalid: loginForm.password.$dirty && loginForm.password.$invalid, valid: loginForm.password.$dirty && loginForm.password.$valid}">
+          <label for="password">Password</label>
+          <div class="input-with-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password"
+                   ng-model="vm.credentials.password" ng-minlength="6" required>
+          </div>
+          <span class="error-msg" ng-show="loginForm.password.$dirty && loginForm.password.$invalid">Password must be at least 6 characters.</span>
+        </div>
+
+        <label class="remember-row">
+          <input type="checkbox" id="remember" ng-model="vm.credentials.remember">
+          <span>Keep me logged in on this device</span>
+        </label>
+
+        <button type="submit" class="btn btn-primary btn-block">Log in</button>
+      </form>
+
+      <p class="auth-switch">New to InvoiceFlow? <a href="signup.html">Create an account</a></p>
+    </div>
+  </main>
+</div>
+
+<ivf-toast></ivf-toast>
+
+<script src="js/vendor/angular.min.js"></script>
+<script src="js/core/core.module.js"></script>
+<script src="js/core/core.factories.js"></script>
+<script src="js/core/core.filters.js"></script>
+<script src="js/core/core.directives.js"></script>
+<script src="js/pages/auth.module.js"></script>
+</body>
+</html>
